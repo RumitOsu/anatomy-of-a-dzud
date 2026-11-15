@@ -1,0 +1,662 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Anatomy of a Dzud</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sofia+Sans+Condensed:wght@500;600;700&family=Sofia+Sans+Extra+Condensed:wght@800;900&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<style>
+/* Layout: one narrow reading column walks down the page beside tall pinned graphics.
+   Night blizzard in dark mode, whiteout in light mode. Heat means loss, blue means weather, amber means living animals. */
+:root{
+  color-scheme:dark;
+  --bg:#0a111e; --bg2:#111c2e; --ink:#eaf0f7; --mute:#93a4bb; --line:#24344e;
+  --cold:#86bfea; --warm:#f3b65c; --loss:#f0683f; --word:#21324c; --snow:#ffffff; --flake:rgba(255,255,255,.85);
+  --sq:#2a3b57; --m0:#18253b; --m1:#4d2f3b; --m2:#923a33; --m3:#d9592d; --m4:#f5a43c; --m5:#fff0bf;
+  --display:"Sofia Sans Extra Condensed","Arial Narrow",Impact,sans-serif;
+  --label:"Sofia Sans Condensed","Arial Narrow",system-ui,sans-serif;
+  --text:"Source Serif 4",Georgia,"Times New Roman",serif;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    color-scheme:light;
+    --bg:#e9eef4; --bg2:#f8fafc; --ink:#13203a; --mute:#54667f; --line:#c8d2df;
+    --cold:#2a6ea8; --warm:#b3721a; --loss:#c8401f; --word:#1a2a47; --snow:#ffffff; --flake:rgba(110,132,160,.8);
+    --sq:#c3cedb; --m0:#d9e1eb; --m1:#f0d7a3; --m2:#e9a555; --m3:#da672d; --m4:#aa2c1e; --m5:#560d14;
+  }
+}
+:root[data-theme="light"]{
+  color-scheme:light;
+  --bg:#e9eef4; --bg2:#f8fafc; --ink:#13203a; --mute:#54667f; --line:#c8d2df;
+  --cold:#2a6ea8; --warm:#b3721a; --loss:#c8401f; --word:#1a2a47; --snow:#ffffff; --flake:rgba(110,132,160,.8);
+  --sq:#c3cedb; --m0:#d9e1eb; --m1:#f0d7a3; --m2:#e9a555; --m3:#da672d; --m4:#aa2c1e; --m5:#560d14;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--text);font-size:19px;line-height:1.62;-webkit-font-smoothing:antialiased;overflow-x:clip}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+a{color:var(--cold);text-underline-offset:3px}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--cold);outline-offset:3px;border-radius:4px}
+.lab{font-family:var(--label);font-weight:600;letter-spacing:.09em;text-transform:uppercase;font-size:.72rem;color:var(--mute)}
+em{font-style:italic}
+strong{font-weight:600}
+
+#bar{position:fixed;left:0;top:0;height:3px;width:100%;transform-origin:0 50%;transform:scaleX(0);background:linear-gradient(90deg,var(--cold),var(--warm));z-index:50}
+
+/* hero */
+.hero{position:relative;min-height:min(94svh,900px);display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;border-bottom:1px solid var(--line)}
+#snow{position:absolute;inset:0;width:100%;height:100%;display:block}
+.hero-in{position:relative;max-width:1320px;width:100%;margin:0 auto;padding-block:0 clamp(28px,6vh,64px);display:grid;gap:14px}
+.hero-top{position:absolute;top:clamp(16px,4vh,36px);left:0;right:0;max-width:1320px;margin:0 auto;display:flex;justify-content:space-between;gap:12px}
+.lede{font-size:clamp(1.25rem,2.4vw,1.75rem);line-height:1.34;max-width:33ch;margin:0;text-wrap:balance}
+.by{font-family:var(--label);font-size:.95rem;color:var(--mute);letter-spacing:.02em}
+.cue{font-family:var(--label);font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);display:inline-flex;align-items:center;gap:8px}
+.cue i{display:block;width:1px;height:26px;background:var(--mute);animation:drip 2.2s ease-in-out infinite;transform-origin:50% 0}
+@keyframes drip{0%{transform:scaleY(0)}50%{transform:scaleY(1)}100%{transform:scaleY(1);opacity:0}}
+
+/* prose */
+.prose{max-width:41rem;margin:0 auto;padding-block:clamp(56px,11vh,120px) clamp(24px,5vh,56px)}
+.prose p{margin:0 0 1.15em}
+.prose p:last-child{margin-bottom:0}
+h2{font-family:var(--display);font-weight:900;font-size:clamp(2.9rem,8vw,5.4rem);line-height:.92;letter-spacing:.005em;text-transform:uppercase;margin:0 0 .35em;text-wrap:balance}
+.kinds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:1.6em 0 0;padding:0;list-style:none}
+.kinds li{border-top:2px solid var(--ink);padding-top:10px;font-size:.92rem;line-height:1.45;color:var(--mute)}
+.kinds b{display:block;font-family:var(--display);font-weight:800;font-size:1.7rem;line-height:1;text-transform:uppercase;color:var(--ink);margin-bottom:4px}
+@media (max-width:560px){.kinds{grid-template-columns:1fr}}
+
+/* scenes */
+.scene{display:grid;grid-template-columns:minmax(0,27rem) minmax(0,1fr);gap:0 clamp(20px,4vw,64px);max-width:1320px;margin:0 auto}
+.steps{grid-column:1;grid-row:1;padding-block:6vh 24vh;min-width:0}
+.stage{grid-column:2;grid-row:1;position:sticky;top:0;height:100vh;height:100svh;align-self:start;display:flex;flex-direction:column;gap:10px;padding-block:clamp(14px,3.5vh,36px);min-width:0}
+.step{min-height:82vh;display:flex;align-items:center}
+.step:last-child{min-height:70vh}
+.card{opacity:.34;transition:opacity .45s ease}
+.step.on .card{opacity:1}
+.card p{margin:0 0 .8em}
+.card p:last-child{margin:0}
+.card .lab{display:block;margin-bottom:8px;color:var(--warm)}
+.viz{flex:1;min-height:0;position:relative}
+.viz svg,.viz canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+[hidden]{display:none!important}
+.head{display:flex;flex-wrap:wrap;align-items:flex-end;gap:6px 20px;min-height:3.4rem}
+.big{font-family:var(--display);font-weight:900;font-size:clamp(2.6rem,6vw,4.6rem);line-height:.9;font-variant-numeric:tabular-nums}
+.sub{font-family:var(--label);font-size:1.15rem;color:var(--mute);line-height:1.22;max-width:30ch;padding-bottom:.25em}
+.read{font-family:var(--label);font-size:1.3rem;line-height:1.25;color:var(--ink);padding-bottom:.2em}
+.read b{color:var(--warm);font-weight:700}
+.foot{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;font-family:var(--label);font-size:.9rem;color:var(--mute)}
+@media (max-width:899px){
+  body{font-size:17.5px}
+  .scene{display:block}
+  .stage{height:61vh;height:61svh;z-index:2;background:var(--bg);border-bottom:1px solid var(--line);padding-block:10px 8px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+  .steps{position:relative;z-index:1;padding-block:0 26vh;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+  .step,.step:last-child{min-height:58svh;align-items:flex-start;padding-top:20px}
+  .head{min-height:2.6rem}
+  .sub{font-size:.9rem}
+}
+@media (min-width:900px){.scene{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}}
+
+/* controls */
+.btn{font-family:var(--label);font-weight:600;font-size:.92rem;letter-spacing:.03em;background:transparent;border:1px solid var(--line);border-radius:999px;padding:5px 14px;cursor:pointer;color:var(--ink);transition:background .2s,border-color .2s}
+.btn:hover{border-color:var(--mute)}
+.btn[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn:disabled{opacity:.35;cursor:not-allowed}
+input[type=range]{accent-color:var(--warm);flex:1;min-width:120px}
+.legend{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center}
+.legend span{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.legend i{width:14px;height:14px;border-radius:3px;display:inline-block}
+#tip{position:fixed;z-index:60;pointer-events:none;background:var(--bg2);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:7px 11px;font-family:var(--label);font-size:.92rem;line-height:1.3;box-shadow:0 8px 28px rgba(0,0,0,.28);max-width:240px;opacity:0;transition:opacity .12s}
+#tip b{font-weight:700}
+#tip.on{opacity:1}
+
+/* chart pieces */
+.ax{font-family:var(--label);font-size:12px;fill:var(--mute)}
+.axl{stroke:var(--line);stroke-width:1}
+.tl-band{fill:var(--ink);opacity:.07}
+.tl-area{fill:var(--warm);opacity:.2}
+.tl-line{fill:none;stroke:var(--warm);stroke-width:2.2;stroke-linejoin:round}
+.tl-goat{fill:none;stroke:var(--cold);stroke-width:1.8;stroke-dasharray:4 4;opacity:0;transition:opacity .5s}
+.tl-goat.on{opacity:1}
+.tl-bar{fill:var(--loss);opacity:.35;transition:opacity .4s}
+.tl-bar.f{opacity:1}
+.tl-cap{font-family:var(--label);font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;fill:var(--mute)}
+.tl-cur{stroke:var(--ink);stroke-width:1;opacity:0}
+.map path{stroke:var(--bg);stroke-linejoin:round;transition:fill .35s ease;vector-effect:non-scaling-stroke}
+.map .prov{stroke-width:1.4;cursor:pointer}
+.map .dist{stroke-width:.5;cursor:pointer}
+.map .b0{fill:var(--m0)}.map .b1{fill:var(--m1)}.map .b2{fill:var(--m2)}.map .b3{fill:var(--m3)}.map .b4{fill:var(--m4)}.map .b5{fill:var(--m5)}
+.map .nd{fill:var(--bg2)}
+.map[data-mode="prov"] .g-dist{display:none}
+.map[data-mode="dist"] .prov{fill:none;stroke:var(--ink);stroke-opacity:.45;stroke-width:1;pointer-events:none}
+.map text{font-family:var(--label);font-weight:700;fill:var(--ink);paint-order:stroke;stroke:var(--bg);stroke-width:.28em;stroke-linejoin:round;text-anchor:middle;pointer-events:none}
+.sq{fill:var(--sq);transition:opacity .35s}
+.sq.dis{fill:var(--loss)}
+.filtered .sq{opacity:.3}
+.map .hot{stroke:var(--ink);stroke-width:2.4}
+.filtered .sq.hl{opacity:1}
+.ing-pct{font-family:var(--display);font-weight:900;font-size:34px;fill:var(--ink);text-anchor:middle}
+.ing-sub{font-family:var(--label);font-size:12.5px;fill:var(--mute);text-anchor:middle}
+.ing-name{font-family:var(--label);font-weight:700;font-size:14px;letter-spacing:.06em;text-transform:uppercase;fill:var(--ink);text-anchor:middle}
+.fk-seg{fill:none;stroke-width:3;stroke-linecap:round;opacity:0;transition:opacity .6s}
+.fk-seg.bad{stroke:var(--loss)}.fk-seg.good{stroke:var(--cold)}
+.fk-n{opacity:0;transition:opacity .6s}
+.fk-n.on,.fk-seg.on{opacity:1}
+.fk-v{font-family:var(--display);font-weight:900;font-size:26px}
+.fk-d{font-family:var(--label);font-size:12.5px;fill:var(--mute)}
+.fk-die{fill:var(--ink);opacity:.06}
+.ml{display:grid;gap:6px;font-family:var(--label);font-size:.92rem;opacity:.3;transition:opacity .5s}
+.ml.on{opacity:1}
+.ml-row{display:grid;grid-template-columns:minmax(0,13.5em) 1fr 3ch;gap:10px;align-items:center}
+.ml-track{height:12px;border-radius:6px;background:var(--m0);position:relative;overflow:hidden}
+.ml-track i{position:absolute;left:0;top:0;bottom:0;border-radius:6px;background:var(--cold)}
+.ml-row:first-child .ml-track i{background:var(--warm)}
+.ml-row b{font-variant-numeric:tabular-nums;font-weight:700;color:var(--ink)}
+
+/* closing */
+.limits{display:grid;gap:22px;margin-top:1.4em}
+.limits div{border-left:2px solid var(--line);padding-left:18px}
+.limits h3,.made h3{font-family:var(--label);font-weight:700;font-size:1.05rem;letter-spacing:.05em;text-transform:uppercase;margin:0 0 4px}
+.limits p{margin:0;font-size:.98rem}
+.made{max-width:1100px;margin:0 auto;padding-block:clamp(40px,8vh,90px)}
+.flow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:26px 0 34px}
+.flow div{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:16px 16px 18px;font-size:.92rem;line-height:1.45;min-width:0}
+.flow b{display:block;font-family:var(--display);font-weight:800;font-size:2.1rem;line-height:1;margin:6px 0 6px;color:var(--warm)}
+.flow p{margin:0;color:var(--mute)}
+@media (max-width:860px){.flow{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:480px){.flow{grid-template-columns:1fr}}
+.cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 48px;font-size:.98rem}
+.cols>div{min-width:0}
+@media (max-width:760px){.cols{grid-template-columns:1fr}}
+.cols ul{margin:8px 0 0;padding-left:1.1em}
+.cols li{margin-bottom:.5em}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;padding:0;list-style:none}
+.tags li{font-family:var(--label);font-weight:600;font-size:.9rem;border:1px solid var(--line);border-radius:999px;padding:3px 12px;margin:0}
+footer{border-top:1px solid var(--line);padding-block:28px 44px;font-family:var(--label);color:var(--mute);font-size:.98rem}
+footer .in{max-width:1100px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 24px}
+footer b{color:var(--ink)}
+.js .rv{opacity:.35;transform:translateY(14px);transition:opacity .7s ease,transform .7s ease}
+.js .rv.in{opacity:1;transform:none}
+@media (prefers-reduced-motion: reduce){.js .rv{opacity:1;transform:none;transition:none}.cue i{animation:none}html{scroll-behavior:auto}}
+</style>
+
+<div id="bar"></div>
+<div id="tip" role="status"></div>
+
+<header class="hero">
+  <canvas id="snow" aria-hidden="true"></canvas>
+  <div class="hero-top gut"><span class="lab">Зуд &nbsp;·&nbsp; a data story</span><span class="lab">Mongolia, 1970–2025</span></div>
+  <div class="hero-in gut">
+    <h1 class="sr">Dzud</h1>
+    <p class="lede">Mongolian has a word for a winter that kills livestock by the million. I went through fifty-five years of national records to learn what makes one, and how early you can see it coming.</p>
+    <div class="by">Analysis and design by Timur Kherlenbayar</div>
+    <div class="cue"><i></i>Scroll</div>
+  </div>
+</header>
+
+<section class="prose gut rv">
+  <p>A dzud (зуд, said roughly like <em>zood</em>) is a whole winter in which snow, ice or cold seals the pasture so tightly that animals can no longer reach the grass underneath. They weaken for weeks and then die, mostly between February and May, long after the weather that doomed them.</p>
+  <p>Mongolia's herds graze outdoors all year, and there are no barns full of feed to fall back on. When the grass is out of reach, the herd is the only thing a family has left to lose. Herders even tell the different kinds of dzud apart by colour.</p>
+  <ul class="kinds">
+    <li><b>White</b>Snow so deep that animals cannot dig down to the grass.</li>
+    <li><b>Iron</b>A thaw that refreezes and locks the pasture under a sheet of ice.</li>
+    <li><b>Black</b>Bare frozen ground with no grass to eat and no snow to drink.</li>
+  </ul>
+</section>
+
+<!-- ONE WINTER -->
+<section class="scene" id="herd">
+  <div class="stage">
+    <div class="head"><div class="big" id="herd-big">44.0M</div><div class="sub" id="herd-sub">animals alive at the December 2009 census</div></div>
+    <div class="viz"><canvas id="herd-cv" aria-label="A field of dots, each standing for fifty thousand animals. About one in four turns grey and falls."></canvas></div>
+    <div class="foot"><span class="legend"><span><i style="background:var(--warm);border-radius:50%"></i>50,000 animals alive</span><span><i style="background:var(--cold);border-radius:50%"></i>50,000 animals dead</span></span></div>
+  </div>
+  <div class="steps">
+    <div class="step"><div class="card"><span class="lab">One winter</span><p>Start with a single year. In December 2009, Mongolia's annual livestock census counted 44 million animals: sheep, goats, cattle, horses and camels. Each dot here stands for 50,000 of them.</p></div></div>
+    <div class="step"><div class="card"><p>By the end of 2010, <strong>10.3 million</strong> of those animals were dead. That is almost one in every four, gone in a single year.</p></div></div>
+    <div class="step"><div class="card"><p>For a herding family, animals are the savings account, the paycheck and the pantry all at once. In Uvurkhangai, the province hit hardest that year, nearly half of all livestock died.</p><p>It had happened before, and it would happen again.</p></div></div>
+  </div>
+</section>
+
+<!-- THE RECORD -->
+<section class="prose gut rv">
+  <h2>Fifty-five years of counting</h2>
+  <p>Mongolia counts its animals every December and has published the totals back to 1970. Put the census next to each year's death toll and the country's recent history is easy to read.</p>
+</section>
+<section class="scene" id="record">
+  <div class="stage">
+    <div class="head"><div class="big" id="tl-big">22–26M</div><div class="sub" id="tl-sub">animals, every year for two decades</div></div>
+    <div class="viz" id="tl-viz"></div>
+    <div class="foot"><span class="legend"><span><i style="background:var(--warm)"></i>Animals alive</span><span><i style="background:var(--loss)"></i>Animals lost that year</span><span id="tl-goatkey" hidden><i style="background:var(--cold)"></i>Goats only</span></span><span>Hover or tap the chart for any year.</span></div>
+  </div>
+  <div class="steps">
+    <div class="step"><div class="card"><span class="lab">1970 to 1990</span><p>For two decades the national herd hardly moved. Under the socialist collectives it stayed between 22 and 26 million animals, and even a bad winter took less than a tenth of them.</p></div></div>
+    <div class="step"><div class="card"><span class="lab">The 1990s</span><p>In the early 1990s the collectives were dissolved and the animals passed into private hands. With no quotas to hold them back, families kept as many as they could. By 1999 the herd had reached 33.6 million.</p></div></div>
+    <div class="step"><div class="card"><span class="lab">2000 to 2002</span><p>Then three hard winters arrived back to back. Mongolia lost 11.2 million animals in three years, and the herd fell to where it had been in the 1970s.</p></div></div>
+    <div class="step"><div class="card"><span class="lab">2010</span><p>The recovery was quick. Seven years later the herd stood at a record 44 million. Then came 2010, the deadliest single year in the whole record.</p></div></div>
+    <div class="step"><div class="card"><span class="lab">2011 to 2022</span><p>After 2010 the herd climbed higher than it had ever been, passing 71 million animals. That is about twenty for every person in the country.</p><p>Much of the growth was goats, kept for their cashmere. There were 5 million of them in 1990 and 27.6 million in 2022.</p></div></div>
+    <div class="step"><div class="card"><span class="lab">2023 and 2024</span><p>The last two hard winters took 14.3 million animals between them. In raw numbers, 2024 was nearly as deadly as 2010.</p><p>The three worst years in this 55-year record have all come since 2000.</p></div></div>
+  </div>
+</section>
+
+<!-- THE MAP -->
+<section class="prose gut rv">
+  <h2>Where the animals died</h2>
+  <p>National totals hide the most important thing about a dzud, which is that it never strikes everywhere at once. Each of these winters had its own geography.</p>
+</section>
+<section class="scene" id="where">
+  <div class="stage">
+    <div class="head"><div class="big" id="map-yr">2001</div><div class="sub" id="map-sub"></div></div>
+    <div class="viz" id="map-viz"></div>
+    <div class="foot">
+      <button class="btn" id="map-play" type="button">Play</button>
+      <input type="range" id="map-year" min="1971" max="2025" value="2001" aria-label="Year">
+      <button class="btn" id="map-prov" type="button" aria-pressed="true">Provinces</button>
+      <button class="btn" id="map-dist" type="button" aria-pressed="false">Districts</button>
+    </div>
+    <div class="foot"><span class="legend" id="map-leg"></span></div>
+  </div>
+  <div class="steps">
+    <div class="step"><div class="card"><span class="lab">2001</span><p>The losses ran through the centre and the north of the country. Govisumber lost 44 percent of its animals, Zavkhan 30 percent and Khuvsgul 26 percent.</p></div></div>
+    <div class="step"><div class="card"><span class="lab">2010</span><p>This time the west and the Gobi took the blow. Uvurkhangai lost 46 percent and Dundgovi 41 percent. Out on the eastern steppe, Sukhbaatar province lost 3 percent and barely noticed.</p></div></div>
+    <div class="step"><div class="card"><span class="lab">2024</span><p>Fourteen years later the map flipped. Sukhbaatar, spared in 2010, lost 47 percent of its animals. Uvurkhangai, the worst-hit province of 2010, lost 2 percent.</p></div></div>
+    <div class="step"><div class="card"><span class="lab">2024, district by district</span><p>Zoom in and it gets starker. Galshar district, in Khentii province, began 2024 with 346,000 animals and lost 89 percent of them. Fourteen districts lost more than half of everything they had.</p></div></div>
+    <div class="step"><div class="card"><span class="lab">Your turn</span><p>The map is yours now. Press play to watch all 55 years, or drag the slider, and point at any province to see its numbers. District detail is available from 2012 onward.</p></div></div>
+  </div>
+</section>
+
+<!-- THREE INGREDIENTS -->
+<section class="prose gut rv">
+  <h2>What makes a dzud</h2>
+  <p>So why Sukhbaatar in 2024 and not in 2010? To find out, I pulled daily records from 41 weather stations along with NASA's rainfall estimates, and described every province's year with three plain questions. Was the summer before it unusually dry? Did snow stay on the ground unusually long? Was the winter unusually cold?</p>
+  <p>Then I checked each answer against what happened to the animals. I counted a year as a mass die-off when a province lost at least a tenth of its livestock. From 1994 to 2025 that happened 65 times.</p>
+</section>
+<section class="scene" id="why">
+  <div class="stage">
+    <div class="head"><div class="read" id="ing-read"></div></div>
+    <div class="viz" id="ing-viz"></div>
+    <div class="foot">
+      <button class="btn" id="t-dry" type="button" aria-pressed="false">Dry summer</button>
+      <button class="btn" id="t-snow" type="button" aria-pressed="false">Long snow</button>
+      <button class="btn" id="t-cold" type="button" aria-pressed="false">Cold winter</button>
+      <button class="btn" id="t-all" type="button">Show all</button>
+    </div>
+    <div class="foot"><span class="legend"><span><i style="background:var(--sq)"></i>One province, one winter</span><span><i style="background:var(--loss)"></i>Ended in a mass die-off</span></span></div>
+  </div>
+  <div class="steps">
+    <div class="step"><div class="card"><span class="lab">672 winters</span><p>Each square is one province in one winter. I sorted them into four stacks by how many of the three conditions they met. The red squares are the winters that ended in a mass die-off.</p></div></div>
+    <div class="step"><div class="card"><span class="lab">None of the three</span><p>When none of the three things happened, a die-off was close to impossible. It occurred 4 times in 196 winters, which is 2 percent.</p></div></div>
+    <div class="step"><div class="card"><span class="lab">Cold alone</span><p>Cold by itself is not the killer most people assume. Thirty winters were unusually cold but came after a decent summer and had ordinary snow. Not one of them ended in a die-off.</p></div></div>
+    <div class="step"><div class="card"><span class="lab">Drought alone, or snow alone</span><p>A dry summer on its own, or long snow on its own, raises the odds only a little. Between 3 and 6 percent of those winters went badly.</p></div></div>
+    <div class="step"><div class="card"><span class="lab">All three together</span><p>Stack all three and everything changes. Of the 74 winters that had a dry summer, long snow and deep cold together, 27 ended in a mass die-off.</p><p>That is 36 percent, about eighteen times the risk of a winter with none of them.</p></div></div>
+    <div class="step"><div class="card"><span class="lab">The anatomy</span><p>A dzud is three ordinary misfortunes lining up. Animals go into winter thin because the summer grass was poor. Snow then buries what little grass there is, and the cold burns through whatever fat they have left.</p><p>Try the three switches yourself, and point at any square to see which winter it was.</p></div></div>
+  </div>
+</section>
+
+<!-- HOW EARLY -->
+<section class="prose gut rv">
+  <h2>How early can you see it?</h2>
+  <p>The three conditions do not arrive together. Summer is over by September. Early snow shows up in November and December, and the cold peaks in January. Most of the dying comes later still, from February to May.</p>
+  <p>That gap is why the question matters. Every week of warning is a week to cut hay, to sell animals while they are still worth something, or to move the herd somewhere better.</p>
+</section>
+<section class="scene" id="when">
+  <div class="stage">
+    <div class="head"><div class="read">Chance that a province has a mass die-off, as each season's news arrives</div></div>
+    <div class="viz" id="fork-viz"></div>
+    <div class="ml" id="ml">
+      <div class="ml-row"><span>Three conditions, simple formula</span><span class="ml-track"><i style="width:56%"></i></span><b>78%</b></div>
+      <div class="ml-row"><span>Machine-learning model, 46 inputs</span><span class="ml-track"><i style="width:52%"></i></span><b>76%</b></div>
+      <div style="color:var(--mute)">How often each one picked the real die-off out of a pair. A coin flip scores 50%, so the bars start there.</div>
+    </div>
+  </div>
+  <div class="steps">
+    <div class="step"><div class="card"><span class="lab">Before summer</span><p>Before anything is known, the chance that a given province has a mass die-off in the coming year is about 1 in 10.</p></div></div>
+    <div class="step"><div class="card"><span class="lab">End of August</span><p>By the end of summer the road forks for the first time. After a dry summer the risk is 15 percent. After a normal or wet one it is 5 percent.</p></div></div>
+    <div class="step"><div class="card"><span class="lab">New Year</span><p>By New Year the two roads are far apart. A dry summer followed by early snow in November and December means a 28 percent risk. If neither happened, the risk is 1.4 percent.</p><p>At this point nearly all of the animals that are going to die are still alive.</p></div></div>
+    <div class="step"><div class="card"><span class="lab">End of winter</span><p>The winter's cold adds the last piece and lifts the worst case to 36 percent. But most of what can be known was already known on the first of January.</p><p>One winter in six had both a dry summer and early snow. Those winters produced almost half of all the die-offs.</p></div></div>
+    <div class="step"><div class="card"><span class="lab">The heavier tool</span><p>I also tried machine learning. I trained a model on 46 weather and herd measurements and tested it the hard way, on years it had never been shown.</p><p>Given one winter that ended in a die-off and one that did not, it picked the right one 76 percent of the time. A formula using only the three conditions scored 78 percent. With just 32 winters to learn from, the simple explanation was also the better forecast.</p></div></div>
+  </div>
+</section>
+
+<!-- LIMITS -->
+<section class="prose gut rv">
+  <h2>What three numbers can't tell you</h2>
+  <p>I trust the pattern, but I would not want anyone to read it as a law. These are the places where it bends.</p>
+  <div class="limits">
+    <div><h3>Most triple threats still end quietly</h3><p>A 36 percent risk means that nearly two times out of three, the worst combination did not end in catastrophe. In 2005, eleven provinces met all three conditions and none of them had a die-off. Herders who see a hard winter coming cut hay, sell early and move their animals, and none of that preparation appears in my data.</p></div>
+    <div><h3>2024 broke the rule</h3><p>Sukhbaatar lost 47 percent of its animals in 2024 after a summer that was not dry. The snow that year was simply extreme, and three yes-or-no questions have no way of saying how much.</p></div>
+    <div><h3>Eighteen times is a soft number</h3><p>Die-offs cluster in a handful of years, so I recalculated everything two thousand times with whole years shuffled in and out. The gap stayed large every time, but its plausible range runs from about five times to far more than eighteen.</p></div>
+    <div><h3>I expected crowding to matter</h3><p>The herd has tripled, so I looked for signs that crowded pastures make a hard winter worse. In these records I could not find a clear one. That may be a limit of province-level data and not proof that herd size is harmless.</p></div>
+  </div>
+</section>
+
+<!-- METHODS -->
+<section class="made gut rv">
+  <h2>How this was made</h2>
+  <p style="max-width:44rem">Everything here comes from public data that I collected, cleaned and joined myself. Nothing was pre-packaged, and the charts on this page are hand-written without a charting library.</p>
+  <div class="flow">
+    <div><span class="lab">Livestock</span><b>245,754</b><p>census and loss figures for 341 districts, 1970 to 2025, pulled from the National Statistics Office of Mongolia's API.</p></div>
+    <div><span class="lab">Weather stations</span><b>734,253</b><p>station-days of temperature and snow depth from 41 Mongolian stations in NOAA's daily climate archive.</p></div>
+    <div><span class="lab">Rainfall</span><b>183,060</b><p>monthly records from NASA POWER, sampled at the centre of each of 339 districts back to 1981.</p></div>
+    <div><span class="lab">Final table</span><b>672</b><p>province-winters, 1994 to 2025, each with a loss rate and the weather that led up to it.</p></div>
+  </div>
+  <div class="cols">
+    <div>
+      <h3>The three conditions, exactly</h3>
+      <ul>
+        <li><strong>Dry summer:</strong> June to August rainfall more than half a standard deviation below that province's 1982–2000 average.</li>
+        <li><strong>Long snow:</strong> days with snow on the ground from November to March, more than half a standard deviation above the 1994–2007 average at nearby stations.</li>
+        <li><strong>Cold winter:</strong> December to February temperature more than half a standard deviation below the 1994–2007 average.</li>
+      </ul>
+      <p>Station readings were spread to districts by distance, then averaged to provinces by herd size, so the weather is measured where the animals are. The pattern holds if I move the cut-off: at a quarter of a standard deviation the risk climbs from 1.5 to 29 percent, and at a full one from 2.6 to 67 percent.</p>
+    </div>
+    <div>
+      <h3>What I checked along the way</h3>
+      <ul>
+        <li>My first version used NASA's modelled snow depth, and it could not see the record snow of 2024 at all. Switching to snow measured on the ground is what made the pattern visible.</li>
+        <li>Every model was scored on whole years it had not seen. A random split would have leaked each winter's weather into its own test and flattered the result.</li>
+        <li>District-level death counts only begin in 2012, so the long analysis uses provinces and the district map starts there.</li>
+        <li>Loss rates divide the year's deaths by the previous December's census. The capital is left out of the analysis.</li>
+      </ul>
+      <h3 style="margin-top:22px">Tools</h3>
+      <ul class="tags"><li>Python</li><li>pandas</li><li>scikit-learn</li><li>LightGBM</li><li>REST APIs</li><li>Geospatial joins</li><li>Bootstrap by year</li><li>Canvas and SVG</li></ul>
+    </div>
+  </div>
+  <p style="margin-top:30px;font-size:.92rem;color:var(--mute);max-width:52rem">Sources: <a href="https://data.1212.mn" target="_blank" rel="noopener">National Statistics Office of Mongolia</a> (tables DT_NSO_1001_021V1 and 029V1), <a href="https://www.ncei.noaa.gov/products/land-based-station/global-historical-climatology-network-daily" target="_blank" rel="noopener">NOAA GHCN-Daily</a>, <a href="https://power.larc.nasa.gov" target="_blank" rel="noopener">NASA POWER</a>, and administrative boundaries from OCHA and the NSO via the <a href="https://data.humdata.org/dataset/cod-ab-mng" target="_blank" rel="noopener">Humanitarian Data Exchange</a>.</p>
+</section>
+
+<footer class="gut"><div class="in"><span><b>Timur Kherlenbayar</b> · M.S. Information Systems, Brigham Young University</span><span><a href="https://www.linkedin.com/in/timur-kherlenbayar" target="_blank" rel="noopener">linkedin.com/in/timur-kherlenbayar</a></span></div></footer>
+
+<script>/*__DATA__*/</script>
+<script>
+(function(){
+"use strict";
+document.documentElement.classList.add('js');
+const DZ=window.DZ, NS='http://www.w3.org/2000/svg';
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)), lerp=(a,b,t)=>a+(b-a)*t;
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const S=(tag,at,par)=>{const e=document.createElementNS(NS,tag);for(const k in at)e.setAttribute(k,at[k]);if(par)par.appendChild(e);return e;};
+const ease=k=>k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
+function tween(dur,fn,done){if(RM||dur<=0){fn(1);done&&done();return;}const t0=performance.now();(function f(t){const k=clamp((t-t0)/dur,0,1);fn(ease(k));if(k<1)requestAnimationFrame(f);else done&&done();})(t0);}
+const T={};
+function tokens(){const cs=getComputedStyle(document.documentElement);['bg','ink','mute','cold','warm','loss','word','snow','flake'].forEach(k=>T[k]=cs.getPropertyValue('--'+k).trim());}
+tokens();
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',tokens);
+new MutationObserver(tokens).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+function rng(seed){let s=seed>>>0;return()=>{s=(s+0x6D2B79F5)|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+const pct=r=>r==null?'no data':(r<0.1?(r*100).toFixed(1):Math.round(r*100))+'%';
+
+/* tooltip */
+const tip=$('#tip');
+function showTip(html,x,y){tip.innerHTML=html;tip.classList.add('on');const w=tip.offsetWidth,h=tip.offsetHeight;tip.style.left=clamp(x+14,6,innerWidth-w-6)+'px';tip.style.top=clamp(y-h-12,6,innerHeight-h-6)+'px';}
+function hideTip(){tip.classList.remove('on');}
+addEventListener('scroll',hideTip,{passive:true});
+
+/* ---------- hero: snow settling on the word ---------- */
+function hero(){
+  const cv=$('#snow'),ctx=cv.getContext('2d'),host=cv.parentElement,FAM='"Sofia Sans Extra Condensed","Arial Narrow",Impact,sans-serif';
+  let W=0,H=0,fs=0,tx=0,ty=0,top,cap,pile,flakes=[],on=true,last=0,wind=0,gust=0;
+  const rand=rng(7);
+  function layout(){
+    const dpr=Math.min(devicePixelRatio||1,2);W=Math.round(host.clientWidth);H=Math.round(host.clientHeight);if(!W||!H)return;
+    cv.width=W*dpr;cv.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.font='900 100px '+FAM;const w100=ctx.measureText('DZUD').width;
+    const y0=58,avail=Math.max(120,$('.hero-in').offsetTop-y0-18);
+    fs=Math.min(W*0.92/w100*100,avail/0.82);ctx.font='900 '+fs+'px '+FAM;const tw=ctx.measureText('DZUD').width;
+    tx=(W-tw)/2;ty=y0+(avail-fs*0.72)/2+fs*0.76;
+    const off=document.createElement('canvas');off.width=W;off.height=H;const o=off.getContext('2d');o.font=ctx.font;o.fillText('DZUD',tx,ty);
+    const img=o.getImageData(0,0,W,H).data;top=new Float32Array(W).fill(-1);
+    for(let x=0;x<W;x++){for(let y=0;y<H;y++){if(img[(y*W+x)*4+3]>128){top[x]=y;break;}}}
+    const mx=fs*0.085;cap=new Float32Array(W);
+    for(let x=0;x<W;x++){if(top[x]<0)continue;let e=8;for(let d=1;d<=8;d++){if(x-d<0||x+d>=W||top[x-d]<0||top[x+d]<0){e=d-1;break;}}
+      const sl=(x>0&&x<W-1&&top[x-1]>=0&&top[x+1]>=0)?Math.abs(top[x+1]-top[x-1]):9;cap[x]=mx*Math.min(1,e/8)*(sl>3?0.25:1);}
+    const old=pile;pile=new Float32Array(W);for(let x=0;x<W;x++)pile[x]=cap[x]*(old?0.6:0.3);
+    const n=Math.round(clamp(W*H/5200,90,420));flakes=[];for(let i=0;i<n;i++)flakes.push(mk(true));
+    draw(0);
+  }
+  function mk(any){const r=0.6+rand()*rand()*2.6;return{x:rand()*W,y:any?rand()*H:-6,py:-10,r,vy:22+r*26,sw:0.5+rand()*1.2,ph:rand()*6.3,front:rand()<0.22};}
+  function step(dt,t){
+    if(!top)return;gust*=0.96;wind=Math.sin(t*0.00023)*0.6+Math.sin(t*0.00071)*0.3+gust;
+    for(const f of flakes){f.py=f.y;f.y+=f.vy*dt;f.x+=(wind*(10+f.r*14)+Math.sin(t*0.001*f.sw+f.ph)*7)*dt;
+      if(f.x<-4)f.x=W+3;else if(f.x>W+4)f.x=-3;
+      const xi=f.x|0;
+      if(xi>=0&&xi<W&&top[xi]>=0){const sf=top[xi]-pile[xi];if(f.py<sf&&f.y>=sf){for(let d=-3;d<=3;d++){const k=xi+d;if(k>=0&&k<W&&top[k]>=0)pile[k]=Math.min(cap[k],pile[k]+f.r*(d?0.55:1.1));}Object.assign(f,mk(false));f.x=rand()*W;continue;}}
+      if(f.y>H+6){Object.assign(f,mk(false));f.x=rand()*W;}
+    }
+  }
+  function drawFlakes(front){ctx.fillStyle=T.flake;ctx.beginPath();for(const f of flakes){if(f.front!==front)continue;ctx.moveTo(f.x+f.r,f.y);ctx.arc(f.x,f.y,f.r,0,6.3);}ctx.fill();}
+  function draw(){
+    if(!W||!H||!top)return;ctx.clearRect(0,0,W,H);drawFlakes(false);
+    ctx.font='900 '+fs+'px '+FAM;ctx.fillStyle=T.word;ctx.fillText('DZUD',tx,ty);
+    ctx.fillStyle=T.snow;
+    for(let x=0;x<W;x++){if(top[x]<0)continue;const a=pile[x>0?x-1:x],b=pile[x<W-1?x+1:x],p=(a+pile[x]*2+b)/4;if(p>0.3)ctx.fillRect(x,top[x]-p,1,p+1.6);}
+    drawFlakes(true);
+  }
+  function loop(t){if(!on)return;const dt=Math.min(0.05,(t-last)/1000||0.016);last=t;step(dt,t);draw();requestAnimationFrame(loop);}
+  host.addEventListener('pointermove',e=>{gust=clamp(gust+(e.movementX||0)*0.004,-2.2,2.2);});
+  new IntersectionObserver(es=>{const v=es[0].isIntersecting;if(v&&!on&&!RM){on=true;last=performance.now();requestAnimationFrame(loop);}else if(!v)on=false;}).observe(host);
+  layout();
+  if(document.fonts&&document.fonts.load)document.fonts.load('900 100px "Sofia Sans Extra Condensed"').then(layout).catch(()=>{});
+  if(RM){on=false;if(pile)for(let x=0;x<W;x++)pile[x]=cap[x]*0.8;draw();}else requestAnimationFrame(loop);
+  return layout;
+}
+
+/* ---------- one winter: the herd of dots ---------- */
+function herd(){
+  const cv=$('#herd-cv'),ctx=cv.getContext('2d'),host=cv.parentElement,N=880,DEAD=206,rand=rng(2010);
+  const dots=[];for(let i=0;i<N;i++)dots.push({i,ph:rand()*6.3,w:0.6+rand(),delay:rand(),dead:false,k:-1});
+  const order=dots.map((d,i)=>i);for(let i=N-1;i>0;i--){const j=(rand()*(i+1))|0;[order[i],order[j]]=[order[j],order[i]];}
+  order.slice(0,DEAD).forEach((ix,k)=>{dots[ix].dead=true;dots[ix].k=k;});
+  let W=0,H=0,R=3,prog=0,target=0,on=false,last=0;
+  function layout(){
+    const dpr=Math.min(devicePixelRatio||1,2);W=host.clientWidth;H=host.clientHeight;if(!W||!H)return;cv.width=W*dpr;cv.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);
+    const ph=Math.max(40,H*0.2),cx=W/2,cy=(H-ph)/2,rx=Math.min(W*0.47,(H-ph)*0.95),ry=Math.min((H-ph)*0.46,rx*0.72);
+    R=Math.sqrt(Math.PI*rx*ry/N)*0.33;
+    for(const d of dots){const a=d.i*2.399963,r=Math.sqrt((d.i+0.5)/N);d.hx=cx+Math.cos(a)*r*rx;d.hy=cy+Math.sin(a)*r*ry;}
+    const ps=R*2.35,cols=Math.max(10,Math.floor(W*0.94/ps)),x0=(W-(cols-1)*ps)/2;
+    for(const d of dots){if(!d.dead)continue;const row=Math.floor(d.k/cols),col=d.k%cols;d.px=x0+col*ps+(row%2?ps/2:0);d.py=H-R-3-row*ps*0.9;}
+    draw(performance.now());
+  }
+  function draw(t){
+    if(!W||!H)return;ctx.clearRect(0,0,W,H);
+    for(let pass=0;pass<2;pass++){
+      ctx.fillStyle=pass?T.cold:T.warm;
+      for(const d of dots){
+        const e=d.dead?ease(clamp((prog-d.delay*0.62)/0.38,0,1)):0;
+        const jx=RM?0:Math.sin(t*0.0011*d.w+d.ph)*1.3*(1-e),jy=RM?0:Math.cos(t*0.0009*d.w+d.ph)*1.3*(1-e);
+        const x=d.dead?lerp(d.hx,d.px,e):d.hx,y=d.dead?lerp(d.hy,d.py,e*e):d.hy;
+        const a=pass?e:1-e;if(a<=0.01)continue;
+        ctx.globalAlpha=pass?a*0.9:a;ctx.beginPath();ctx.arc(x+jx,y+jy,R,0,6.3);ctx.fill();
+      }
+    }
+    ctx.globalAlpha=1;
+  }
+  function loop(t){if(!on)return;const dt=Math.min(0.05,(t-last)/1000||0.016);last=t;
+    if(prog!==target){prog=target>prog?Math.min(target,prog+dt/3.2):Math.max(target,prog-dt/1.2);
+      const dead=10.3*clamp(prog/0.9,0,1);$('#herd-big').textContent=(44.0-dead).toFixed(1)+'M';}
+    draw(t);requestAnimationFrame(loop);}
+  new IntersectionObserver(es=>{const v=es[0].isIntersecting;if(v&&!on){on=true;last=performance.now();requestAnimationFrame(loop);}else if(!v)on=false;},{rootMargin:'100px'}).observe(host);
+  layout();
+  return{layout,step(i){target=i>=1?1:0;if(RM){prog=target;$('#herd-big').textContent=(target?33.7:44.0).toFixed(1)+'M';draw(0);}
+    $('#herd-sub').textContent=i>=1?'animals still alive a year later. 10.3 million had died.':'animals alive at the December 2009 census';}};
+}
+
+/* ---------- fifty-five years ---------- */
+function timeline(){
+  const host=$('#tl-viz'),nat=DZ.nat;
+  const F=[[1970,1990],[1990,1999],[2000,2002],[2003,2010],[2011,2022],[2023,2024]];
+  const ST=[['22–26M','animals, every year for two decades'],['33.6M','animals by 1999, after the herds went private'],['11.2M','animals lost in three winters, 2000 to 2002'],['10.3M','lost in 2010, the deadliest year on record'],['71.1M','animals in 2022, about twenty per person'],['14.3M','animals lost across 2023 and 2024']];
+  let cur=0,X,band,bars=[],goat,bx=0,bw=0,cursor,W=0;
+  function build(){
+    host.innerHTML='';const w=host.clientWidth,h=host.clientHeight;if(!w||!h)return;W=w;
+    const m={l:34,r:10,t:20,b:22},gap=34,hA=(h-m.t-m.b-gap)*0.64,hB=(h-m.t-m.b-gap)-hA,yB=m.t+hA+gap;
+    X=y=>m.l+(y-1970)/55*(w-m.l-m.r);const YA=v=>m.t+hA-v/75*hA,HB=v=>v/11*hB;
+    const svg=S('svg',{viewBox:`0 0 ${w} ${h}`,role:'img','aria-label':'National herd size and annual losses, 1970 to 2025'},host);
+    band=S('rect',{class:'tl-band',y:m.t-12,height:h-m.t-m.b+16,rx:5},svg);
+    [0,25,50,75].forEach(v=>{S('line',{class:'axl',x1:m.l,x2:w-m.r,y1:YA(v),y2:YA(v)},svg);S('text',{class:'ax',x:m.l-6,y:YA(v)+4,'text-anchor':'end'},svg).textContent=v;});
+    [5,10].forEach(v=>{S('line',{class:'axl',x1:m.l,x2:w-m.r,y1:yB+HB(v),y2:yB+HB(v)},svg);S('text',{class:'ax',x:m.l-6,y:yB+HB(v)+4,'text-anchor':'end'},svg).textContent=v;});
+    S('line',{class:'axl',x1:m.l,x2:w-m.r,y1:yB,y2:yB,style:'stroke:var(--mute)'},svg);
+    S('text',{class:'tl-cap',x:m.l,y:m.t-6},svg).textContent='Animals alive, millions';
+    S('text',{class:'tl-cap',x:m.l,y:yB-8},svg).textContent='Animals lost during the year, millions';
+    for(let y=1970;y<=2020;y+=10)S('text',{class:'ax',x:X(y),y:h-5,'text-anchor':y===1970?'start':'middle'},svg).textContent=y;
+    const pts=nat.map(d=>[X(d.y),YA(d.herd)]);
+    S('path',{class:'tl-area',d:'M'+pts.map(p=>p.join(',')).join('L')+`L${X(2025)},${YA(0)}L${X(1970)},${YA(0)}Z`},svg);
+    goat=S('path',{class:'tl-goat',d:'M'+nat.map(d=>X(d.y)+','+YA(d.sp[1])).join('L')},svg);
+    S('path',{class:'tl-line',d:'M'+pts.map(p=>p.join(',')).join('L')},svg);
+    const bwid=Math.max(2,(w-m.l-m.r)/56*0.68);bars=[];
+    nat.forEach(d=>{if(d.loss==null)return;const r=S('rect',{class:'tl-bar',x:X(d.y)-bwid/2,y:yB,width:bwid,height:Math.max(1,HB(d.loss))},svg);bars.push([d.y,r]);});
+    cursor=S('line',{class:'tl-cur',y1:m.t,y2:h-m.b},svg);
+    const hit=S('rect',{x:m.l,y:0,width:w-m.l-m.r,height:h,fill:'transparent'},svg);
+    const mv=e=>{const b=svg.getBoundingClientRect(),yr=clamp(Math.round(1970+(e.clientX-b.left-m.l)/(w-m.l-m.r)*55),1970,2025),d=nat[yr-1970];
+      cursor.setAttribute('x1',X(yr));cursor.setAttribute('x2',X(yr));cursor.style.opacity=.5;
+      showTip(`<b>${yr}</b><br>${d.herd.toFixed(1)} million alive in December`+(d.loss!=null?`<br>${d.loss.toFixed(2)} million lost`+(d.rate!=null?` (${pct(d.rate)})`:''):''),e.clientX,e.clientY);};
+    hit.addEventListener('pointermove',mv);hit.addEventListener('pointerdown',mv);hit.addEventListener('pointerleave',()=>{hideTip();cursor.style.opacity=0;});
+    apply(cur,true);
+  }
+  function apply(i,instant){
+    cur=i;if(!X)return;const f=F[i],pad=W/56*0.5,nx=X(f[0])-pad,nw=X(f[1])-X(f[0])+pad*2,ox=bx,ow=bw;
+    tween(instant?0:650,k=>{bx=lerp(ox,nx,k);bw=lerp(ow,nw,k);band.setAttribute('x',bx);band.setAttribute('width',Math.max(0,bw));});
+    bars.forEach(([y,r])=>r.classList.toggle('f',y>=f[0]&&y<=f[1]));
+    goat.classList.toggle('on',i===4);$('#tl-goatkey').hidden=i!==4;
+    $('#tl-big').textContent=ST[i][0];$('#tl-sub').textContent=ST[i][1];
+  }
+  build();return{layout:build,step:i=>apply(i,false)};
+}
+
+/* ---------- the map ---------- */
+function mapScene(){
+  const host=$('#map-viz'),FULL=[0,0,993,482],EAST=[548,84,445,372];
+  let vb=FULL.slice(),year=2001,mode='prov',timer=null;
+  const svg=S('svg',{viewBox:FULL.join(' '),preserveAspectRatio:'xMidYMid meet',class:'map','data-mode':'prov',role:'img','aria-label':'Map of Mongolia shaded by the share of livestock lost'},host);
+  const gD=S('g',{class:'g-dist'},svg),gP=S('g',{class:'g-prov'},svg),gL=S('g',{},svg);
+  DZ.dist.forEach((d,i)=>{d.el=S('path',{d:d.d},gD);d.el._d=d;});
+  DZ.prov.forEach(p=>{p.el=S('path',{d:p.d},gP);p.el._p=p;p.lab=S('text',{x:p.cx,y:p.cy},gL);});
+  const bin=r=>r==null?'nd':r<.02?'b0':r<.05?'b1':r<.10?'b2':r<.20?'b3':r<.35?'b4':'b5';
+  $('#map-leg').innerHTML='<span>Share of animals lost:</span>'+[['m0','under 2%'],['m1','2–5%'],['m2','5–10%'],['m3','10–20%'],['m4','20–35%'],['m5','over 35%']].map(a=>`<span><i style="background:var(--${a[0]})"></i>${a[1]}</span>`).join('');
+  const sl=$('#map-year'),bp=$('#map-prov'),bd=$('#map-dist'),play=$('#map-play');
+  function fsz(){const pw=host.clientWidth||600,sc=Math.max(vb[2]/pw,vb[3]/(host.clientHeight||300));gL.setAttribute('font-size',(12.5*sc).toFixed(2));}
+  function paint(){
+    if(year<2012)mode='prov';bd.disabled=year<2012;
+    svg.setAttribute('data-mode',mode);bp.setAttribute('aria-pressed',mode==='prov');bd.setAttribute('aria-pressed',mode==='dist');
+    $('#map-yr').textContent=year;sl.value=year;
+    const n=DZ.nat[year-1970];$('#map-sub').textContent=n.loss!=null?`${n.loss.toFixed(1)} million animals lost nationwide, ${pct(n.rate)} of the herd`:'';
+    DZ.prov.forEach(p=>{const r=p.r[year-1971];p.el.setAttribute('class','prov '+bin(r));p.lab.textContent=(mode==='prov'&&r!=null&&r>=0.10)?Math.round(r*100)+'%':'';});
+    if(mode==='dist')DZ.dist.forEach(d=>d.el.setAttribute('class','dist '+bin(d.r[year-2012])));
+  }
+  function zoom(to,instant){const from=vb.slice();tween(instant?0:900,k=>{vb=from.map((v,i)=>lerp(v,to[i],k));svg.setAttribute('viewBox',vb.map(v=>v.toFixed(1)).join(' '));fsz();});}
+  function stop(){if(timer){clearInterval(timer);timer=null;play.textContent='Play';}}
+  play.addEventListener('click',()=>{if(timer){stop();return;}if(year>=2025)year=1970;play.textContent='Pause';
+    timer=setInterval(()=>{year++;paint();if(year>=2025)stop();},430);});
+  sl.addEventListener('input',()=>{stop();year=+sl.value;paint();});
+  bp.addEventListener('click',()=>{mode='prov';paint();});
+  bd.addEventListener('click',()=>{if(year<2012)return;mode='dist';paint();});
+  const mv=e=>{const t=e.target;if(t._p){const p=t._p,r=p.r[year-1971],hd=p.herd[year-1971];showTip(`<b>${p.name}</b> · ${year}<br>${r==null?'No data':'Lost '+pct(r)+' of its animals'}`+(hd?`<br>${(hd/1000).toFixed(2)} million at the start of the year`:''),e.clientX,e.clientY);}
+    else if(t._d){const d=t._d,r=d.r[year-2012];showTip(`<b>${d.name}</b>, ${d.p>=0?DZ.prov[d.p].name:''} · ${year}<br>${r==null?'No data':'Lost '+pct(r)+' of its animals'}`,e.clientX,e.clientY);}else hideTip();};
+  svg.addEventListener('pointermove',mv);svg.addEventListener('pointerdown',mv);svg.addEventListener('pointerleave',hideTip);
+  paint();fsz();
+  const SC=[[2001,'prov',FULL],[2010,'prov',FULL],[2024,'prov',FULL],[2024,'dist',EAST],[2024,'dist',FULL]];
+  const gal=DZ.dist.find(d=>d.name==='Galshar');let galLab=null;
+  function mark(show){if(!gal)return;gal.el.classList.toggle('hot',show);
+    if(show&&!galLab){const b=gal.el.getBBox();galLab=S('text',{x:b.x+b.width/2,y:b.y+b.height/2+4},gL);galLab.textContent='Galshar 89%';gD.appendChild(gal.el);}
+    if(galLab)galLab.style.display=show?'':'none';}
+  return{layout:fsz,step(i){stop();const s=SC[i];year=s[0];mode=s[1];paint();mark(i===3);zoom(s[2]);}};
+}
+
+/* ---------- three ingredients ---------- */
+function ingredients(){
+  const host=$('#ing-viz'),read=$('#ing-read');
+  const P=DZ.pw.map(r=>({y:r[0],p:r[1],rate:r[2],d:r[3],s:r[4],c:r[5],k:r[3]+r[4]+r[5],dis:r[2]>=0.10}));
+  const B={d:$('#t-dry'),s:$('#t-snow'),c:$('#t-cold')};let sel=null,label='',svg;
+  function build(){
+    host.innerHTML='';const w=host.clientWidth,h=host.clientHeight;if(!w||!h)return;
+    const cols=w<520?7:10,gapG=w<520?10:30,padT=58,padB=30,maxRows=Math.ceil(235/cols);
+    const cell=Math.min((w-3*gapG)/(4*cols),(h-padT-padB)/maxRows),sq=cell*0.84,gw=cols*cell,x0=(w-(4*gw+3*gapG))/2,base=h-padB;
+    svg=S('svg',{viewBox:`0 0 ${w} ${h}`,role:'img','aria-label':'Province-winters grouped by how many of the three conditions they met'},host);
+    [0,1,2,3].forEach(k=>{
+      const g=P.filter(q=>q.k===k).sort((a,b)=>(b.dis-a.dis)||(b.rate-a.rate)),gx=x0+k*(gw+gapG);
+      g.forEach((q,i)=>{q.el=S('rect',{x:gx+(i%cols)*cell,y:base-(Math.floor(i/cols)+1)*cell,width:sq,height:sq,rx:sq*0.2,class:'sq'+(q.dis?' dis':'')},svg);q.el._q=q;});
+      const nd=g.filter(q=>q.dis).length,ty=base-Math.ceil(g.length/cols)*cell-8;
+      S('text',{class:'ing-pct',x:gx+gw/2,y:ty-18},svg).textContent=Math.round(nd/g.length*100)+'%';
+      S('text',{class:'ing-sub',x:gx+gw/2,y:ty-2},svg).textContent=nd+' of '+g.length;
+      S('text',{class:'ing-name',x:gx+gw/2,y:base+20},svg).textContent=['None','One','Two','All three'][k];
+    });
+    const mv=e=>{const q=e.target._q;if(!q){hideTip();return;}showTip(`<b>${DZ.prov[q.p].name}</b> · winter of ${q.y-1}–${String(q.y).slice(2)}<br>Lost ${pct(q.rate)} of its animals<br>${[q.d?'Dry summer':'',q.s?'Long snow':'',q.c?'Cold winter':''].filter(Boolean).join(' · ')||'None of the three'}`,e.clientX,e.clientY);};
+    svg.addEventListener('pointermove',mv);svg.addEventListener('pointerdown',mv);svg.addEventListener('pointerleave',hideTip);
+    apply();
+  }
+  function apply(){
+    if(!svg)return;svg.classList.toggle('filtered',!!sel);let n=0,d=0;
+    P.forEach(q=>{const m=sel?sel(q):false;q.el.classList.toggle('hl',m);if(m){n++;if(q.dis)d++;}});
+    read.innerHTML=sel?`<b>${label}:</b> ${d} mass die-off${d===1?'':'s'} in ${n} winters${n?' ('+(d/n*100<10&&d?(d/n*100).toFixed(1):Math.round(d/n*100))+'%)':''}`:'672 province-winters from 1994 to 2025. 65 ended in a mass die-off.';
+  }
+  function combo(D,Sn,C){B.d.setAttribute('aria-pressed',!!D);B.s.setAttribute('aria-pressed',!!Sn);B.c.setAttribute('aria-pressed',!!C);
+    sel=q=>q.d==D&&q.s==Sn&&q.c==C;const a=[D?'Dry summer':'',Sn?'long snow':'',C?'cold winter':''].filter(Boolean);
+    label=a.length?(a.join(' + ').replace(/^./,ch=>ch.toUpperCase())+(a.length<3?', nothing else':'')):'None of the three';apply();}
+  function all(){Object.values(B).forEach(b=>b.setAttribute('aria-pressed','false'));sel=null;apply();}
+  Object.values(B).forEach(b=>b.addEventListener('click',()=>{b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')!=='true');combo(+(B.d.getAttribute('aria-pressed')==='true'),+(B.s.getAttribute('aria-pressed')==='true'),+(B.c.getAttribute('aria-pressed')==='true'));}));
+  $('#t-all').addEventListener('click',all);
+  build();
+  return{layout:build,step(i){
+    if(i===0||i===5)all();else if(i===1)combo(0,0,0);else if(i===2)combo(0,0,1);else if(i===4)combo(1,1,1);
+    else{Object.values(B).forEach(b=>b.setAttribute('aria-pressed','false'));sel=q=>q.k===1&&!q.c;label='A dry summer alone, or long snow alone';apply();}
+  }};
+}
+
+/* ---------- how early ---------- */
+function fork(){
+  const host=$('#fork-viz'),bad=[9.7,15.1,28.3,36.49],good=[9.7,5.0,1.4,2.0],xs=[0.05,0.35,0.65,0.95];
+  const names=['Before summer','End of August','New Year','End of winter'];
+  const bd=['','after a dry summer','dry summer, then early snow','all three conditions'],gd=['','after a normal or wet summer','neither','none of the three'];
+  let cur=0,els=[];
+  function build(){
+    host.innerHTML='';els=[];const w=host.clientWidth,h=host.clientHeight;if(!w||!h)return;
+    const m={l:34,r:8,t:26,b:40},X=f=>m.l+f*(w-m.l-m.r),Y=v=>m.t+(1-v/42)*(h-m.t-m.b);
+    const svg=S('svg',{viewBox:`0 0 ${w} ${h}`,role:'img','aria-label':'How the risk of a mass die-off diverges as each season passes'},host);
+    S('rect',{class:'fk-die',x:X(0.72),y:m.t-8,width:w-m.r-X(0.72),height:h-m.t-m.b+8,rx:5},svg);
+    S('text',{class:'fk-d',x:w-m.r-6,y:Y(11),'text-anchor':'end'},svg).textContent=w<520?'Most deaths: Feb–May':'Most animals die here, February to May';
+    [0,10,20,30,40].forEach(v=>{S('line',{class:'axl',x1:m.l,x2:w-m.r,y1:Y(v),y2:Y(v)},svg);S('text',{class:'ax',x:m.l-6,y:Y(v)+4,'text-anchor':'end'},svg).textContent=v+'%';});
+    const nm=w<520?['June','End of Aug','New Year','March']:names;
+    xs.forEach((f,i)=>{const a=i===0?'start':i===3?'end':'middle';S('text',{class:'ax',x:X(f),y:h-m.b+20,'text-anchor':a,style:'font-size:13px;font-weight:600;fill:var(--ink)'},svg).textContent=nm[i];});
+    for(let i=1;i<4;i++){
+      els.push([i,S('path',{class:'fk-seg bad',d:`M${X(xs[i-1])},${Y(bad[i-1])}L${X(xs[i])},${Y(bad[i])}`},svg)]);
+      els.push([i,S('path',{class:'fk-seg good',d:`M${X(xs[i-1])},${Y(good[i-1])}L${X(xs[i])},${Y(good[i])}`},svg)]);
+    }
+    const narrow=w<560;
+    xs.forEach((f,i)=>{
+      const a=i===3?'end':i===0?'start':'middle',dx=i===3?-10:i===0?10:0;
+      const g=S('g',{class:'fk-n'},svg);els.push([i,g]);
+      S('circle',{cx:X(f),cy:Y(bad[i]),r:6,fill:i?'var(--loss)':'var(--ink)'},g);
+      S('text',{class:'fk-v',x:X(f)+(i?dx:0),y:Y(bad[i])-(i?14:24),'text-anchor':a,fill:i?'var(--loss)':'var(--ink)'},g).textContent=(i?Math.round(bad[i]):'1 in 10')+(i?'%':'');
+      if(i){if(!narrow)S('text',{class:'fk-d',x:X(f)+dx,y:Y(bad[i])-42,'text-anchor':a},g).textContent=bd[i];
+        S('circle',{cx:X(f),cy:Y(good[i]),r:6,fill:'var(--cold)'},g);
+        S('text',{class:'fk-v',x:X(f)+dx,y:Y(good[i])+(i===1?32:-12),'text-anchor':a,fill:'var(--cold)',style:'font-size:22px'},g).textContent=(good[i]<2?good[i].toFixed(1):Math.round(good[i]))+'%';
+        if(!narrow&&i===1)S('text',{class:'fk-d',x:X(f)+dx,y:Y(good[i])+48,'text-anchor':a},g).textContent=gd[i];}
+    });
+    apply(cur);
+  }
+  function apply(i){cur=i;els.forEach(([k,e])=>e.classList.toggle('on',k<=Math.min(i,3)));$('#ml').classList.toggle('on',i>=4);}
+  build();return{layout:build,step:apply};
+}
+
+/* ---------- wiring ---------- */
+const heroLayout=hero();
+const H={herd:herd(),record:timeline(),where:mapScene(),why:ingredients(),when:fork()};
+const scenes=$$('.scene').map(el=>({el,steps:$$('.step',el),cur:-1,h:H[el.id]}));
+const mq=matchMedia('(max-width:899px)'),bar=$('#bar');
+let tick=false;
+function onScroll(){
+  tick=false;const vh=innerHeight,focus=vh*(mq.matches?0.92:0.62);
+  for(const s of scenes){const r=s.el.getBoundingClientRect();if(r.bottom<-vh||r.top>vh*2)continue;
+    let ix=0;s.steps.forEach((st,i)=>{if(st.getBoundingClientRect().top<focus)ix=i;});
+    if(ix!==s.cur){s.cur=ix;s.steps.forEach((st,i)=>st.classList.toggle('on',i===ix));s.h&&s.h.step(ix);}}
+  const d=document.documentElement;bar.style.transform='scaleX('+clamp(scrollY/Math.max(1,d.scrollHeight-vh),0,1)+')';
+}
+addEventListener('scroll',()=>{if(!tick){tick=true;requestAnimationFrame(onScroll);}},{passive:true});
+scenes.forEach(s=>{s.cur=0;s.steps.forEach((st,i)=>st.classList.toggle('on',i===0));s.h&&s.h.step(0);});
+let rz;const relayout=()=>{clearTimeout(rz);rz=setTimeout(()=>{heroLayout();Object.values(H).forEach(h=>h.layout());scenes.forEach(s=>s.h&&s.h.step(Math.max(0,s.cur)));onScroll();},140);};
+addEventListener('resize',relayout);
+if(window.ResizeObserver){const ro=new ResizeObserver(relayout);ro.observe($('.hero'));$$('.viz').forEach(v=>ro.observe(v));}
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{rootMargin:'0px 0px -8% 0px'});
+$$('.rv').forEach(e=>io.observe(e));
+onScroll();
+})();
+</script>

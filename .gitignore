@@ -1,0 +1,8 @@
+# raw downloads are re-created by analysis/00_download.sh
+analysis/raw/
+analysis/*.parquet
+analysis/stations.csv
+__pycache__/
+*.pyc
+.claude/
+.DS_Store
